@@ -45,11 +45,43 @@ jobs:
           cd package
           zip -r "$GITHUB_WORKSPACE/skip-ad-chrome.zip" skip-ad-chrome
 
+      - name: Pack CRX
+        env:
+          CRX_PRIVATE_KEY: ${{ secrets.CRX_PRIVATE_KEY }}
+        run: |
+          if [ -z "$CRX_PRIVATE_KEY" ]; then
+            echo "CRX_PRIVATE_KEY secret is not set" >&2
+            exit 1
+          fi
+          printf '%s' "$CRX_PRIVATE_KEY" > "$RUNNER_TEMP/crx-key.pem"
+          chmod 600 "$RUNNER_TEMP/crx-key.pem"
+          CHROME_BIN="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || command -v chromium-browser)"
+          if [ -z "$CHROME_BIN" ]; then
+            echo "Chrome is not installed on this runner" >&2
+            exit 1
+          fi
+          RUNNER=""
+          if command -v xvfb-run >/dev/null; then
+            RUNNER="xvfb-run -a"
+          fi
+          $RUNNER "$CHROME_BIN" \
+            --pack-extension="$GITHUB_WORKSPACE/output/chrome-mv3-release" \
+            --pack-extension-key="$RUNNER_TEMP/crx-key.pem" \
+            --no-message-box
+          mv "$GITHUB_WORKSPACE/output/chrome-mv3-release.crx" "$GITHUB_WORKSPACE/skip-ad-chrome.crx"
+
+      - name: Check CRX extension ID
+        env:
+          CRX_PRIVATE_KEY: ${{ secrets.CRX_PRIVATE_KEY }}
+          EXPECTED_ID: cfdnhohciglmamadiknmjjjpifnbeemk
+        run: |
+          node -e "const c=require('crypto'); const der=c.createPublicKey(process.env.CRX_PRIVATE_KEY).export({type:'spki',format:'der'}); const hex=c.createHash('sha256').update(der).digest('hex').slice(0,32); const id=[...hex].map(x=>String.fromCharCode(97+parseInt(x,16))).join(''); console.log('CRX extension ID:', id); if (id !== process.env.EXPECTED_ID) { console.error('expected', process.env.EXPECTED_ID); process.exit(1); }"
+
       - name: Publish release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "$GITHUB_REF_NAME" skip-ad-chrome.zip \
+          gh release create "$GITHUB_REF_NAME" skip-ad-chrome.zip skip-ad-chrome.crx \
             --title "Skip Ad ${GITHUB_REF_NAME#v}" \
-            --notes "安装：下载 skip-ad-chrome.zip，解压后在 chrome://extensions 开启开发者模式，点「加载已解压的扩展程序」，选择 skip-ad-chrome 文件夹。" \
+            --notes "安装：下载 skip-ad-chrome.zip，解压后在 chrome://extensions 开启开发者模式，点「加载已解压的扩展程序」，选择 skip-ad-chrome 文件夹。skip-ad-chrome.crx 只能在 Linux 的 Chrome 或企业策略下安装，Windows 和 macOS 请用 zip。" \
             --generate-notes
