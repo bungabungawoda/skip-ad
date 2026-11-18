@@ -11,6 +11,16 @@
 
 ## 安装
 
+### 一句话装好
+
+不想自己敲命令，可以把下面这句话发给你常用的编程助手（Codex、Claude Code 等）：
+
+> 按 https://github.com/bungabungawoda/skip-ad 里的安装技能，帮我配置 magpie 并装好扩展。
+
+助手会读取仓库里的 [安装技能](skills/install-skip-ad/SKILL.md)，装好 magpie、拉取代码并构建。最后你只需要在 Chrome 的扩展页点「加载已解压的扩展程序」，选择 `output/chrome-mv3`。
+
+### 手动安装
+
 需要 Node 22.13 以上和 Chrome 120 以上。在项目目录里运行：
 
 ```bash
@@ -68,11 +78,11 @@ Key 只保存在你这台电脑的浏览器里；发起请求时，Key 会发给
 
 ### 用 magpie 省掉 API Key
 
-不想申请模型 API Key，可以先在本机运行 [magpie](https://usemagpie.ai)。它提供一个本地接口，把扩展的请求转给你在 magpie 里配置的模型或已经登录的账号，Key 可以留空。
+不想申请模型 API Key，可以先在本机运行 [magpie](https://github.com/yetone/magpie)。它提供一个本地接口，把扩展的请求转给你在 magpie 里配置的模型或已经登录的账号，Key 可以留空。
 
 1. 启动 magpie，在它的界面里添加一个可用的模型。
 2. 回到扩展设置页，把「API 地址」填成 `http://127.0.0.1:3425/v1`，Key 留空。
-3. 模型名填 magpie 里显示的「服务商/模型」，例如 `deepseek/deepseek-v4-pro`，点「连接」。
+3. 模型名填 `magpie models` 打印的完整 id，例如 `deepseek/deepseek-v4-pro` 或 `group/xxx`，点「连接」。
 
 扩展只连本机地址，不经过扩展作者的服务器。请求最终发给谁，取决于你在 magpie 里配置的服务商或本地模型。
 
