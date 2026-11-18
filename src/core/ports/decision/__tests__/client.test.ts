@@ -207,6 +207,44 @@ describe("决策客户端", () => {
     expect(sleep).toHaveBeenCalledWith(37_000);
   });
 
+  it("Google 429 同时有 Header 和正文时按正文等待", async () => {
+    const fetchMock = vi
+      .fn<FetchLike>()
+      .mockResolvedValueOnce(
+        jsonResponse(
+          {
+            error: {
+              message: "Rate limit exceeded. Please retry in 37s."
+            }
+          },
+          429,
+          { "retry-after": "2" }
+        )
+      )
+      .mockResolvedValueOnce(jsonResponse(okBody));
+    const sleep = vi.fn(async () => undefined);
+    const client = createDecisionClient(connection, { fetchImpl: fetchMock, sleep });
+    await client.decide({ input, questions });
+    expect(sleep).toHaveBeenCalledWith(37_000);
+  });
+
+  it("TypeSafe 429 固定等 30 秒，忽略响应里的等待建议", async () => {
+    const fetchMock = vi
+      .fn<FetchLike>()
+      .mockResolvedValueOnce(
+        jsonResponse(
+          { error: "slow down", retry_after_seconds: 5 },
+          429,
+          { "retry-after": "2" }
+        )
+      )
+      .mockResolvedValueOnce(jsonResponse(typesafeOkBody));
+    const sleep = vi.fn(async () => undefined);
+    const client = createDecisionClient(typesafeConnection, { fetchImpl: fetchMock, sleep });
+    await client.decide({ input, questions });
+    expect(sleep).toHaveBeenCalledWith(30_000);
+  });
+
   it("连续 429 按累计等待预算重试", async () => {
     const fetchMock = vi.fn<FetchLike>(
       async () => jsonResponse({ error: "limit" }, 429, { "retry-after": "60" })

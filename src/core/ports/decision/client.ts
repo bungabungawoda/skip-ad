@@ -62,6 +62,7 @@ interface DecisionClientDeps {
 
 const DEFAULT_TIMEOUT_MS = 60_000;
 const RETRY_DELAY_MS = 1_000;
+const TYPESAFE_RATE_LIMIT_DELAY_MS = 30_000;
 
 const DECISION_LABELS: RequestLabels = {
   cancelled: "决策请求已取消",
@@ -208,6 +209,17 @@ function authHeaders(
     : { "x-goog-api-key": connection.apiKey };
 }
 
+function rateLimitDelayMs(
+  status: number,
+  protocol: DecisionProtocol,
+  detail: string,
+  response: Response
+): number | undefined {
+  if (status !== 429) return undefined;
+  if (protocol === "typesafe") return TYPESAFE_RATE_LIMIT_DELAY_MS;
+  return retryAfterFromDetail(detail) ?? retryAfterMs(response);
+}
+
 interface AttemptInput {
   connection: DecisionConnection;
   request: DecisionRequest;
@@ -250,8 +262,6 @@ async function attempt(input: AttemptInput): Promise<AttemptOutcome> {
       const detail = await readErrorDetail(response, "读取决策接口错误响应体失败");
       const truncated = detail.slice(0, 300);
       const kind = classifyHttpStatus(response.status, truncated);
-      const headerDelay = retryAfterMs(response);
-      const bodyDelay = retryAfterFromDetail(detail);
       const error = new LlmError(
         `决策请求失败（${response.status}）${truncated ? `：${truncated}` : ""}`,
         kind,
@@ -260,7 +270,7 @@ async function attempt(input: AttemptInput): Promise<AttemptOutcome> {
       return {
         ok: false,
         error,
-        retryAfter: headerDelay ?? bodyDelay
+        retryAfter: rateLimitDelayMs(response.status, protocol, detail, response)
       };
     }
     const rawText = await response.text();
