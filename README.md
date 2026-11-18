@@ -32,9 +32,9 @@ npm run build
 
 色块只是标记，不影响拖动进度条。想看这段广告，照常拖进去就行。
 
-下面这段演示视频展示了自动跳过和撤销的过程：
+下面这段演示展示了自动跳过和撤销的过程：
 
-<video src="images/demo-skip-ad.mp4" controls width="720"></video>
+https://github.com/user-attachments/assets/38183045-32ac-4d5e-b70f-58623ebd14e2
 
 工具栏角标告诉你扩展现在在做什么：
 
