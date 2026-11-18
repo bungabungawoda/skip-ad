@@ -81,7 +81,15 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "$GITHUB_REF_NAME" skip-ad-chrome.zip skip-ad-chrome.crx \
-            --title "Skip Ad ${GITHUB_REF_NAME#v}" \
-            --notes "安装：下载 skip-ad-chrome.zip，解压后在 chrome://extensions 开启开发者模式，点「加载已解压的扩展程序」，选择 skip-ad-chrome 文件夹。skip-ad-chrome.crx 只能在 Linux 的 Chrome 或企业策略下安装，Windows 和 macOS 请用 zip。" \
-            --generate-notes
+          NOTES="安装：下载 skip-ad-chrome.zip，解压后在 chrome://extensions 开启开发者模式，点「加载已解压的扩展程序」，选择 skip-ad-chrome 文件夹。skip-ad-chrome.crx 只能在 Linux 的 Chrome 或企业策略下安装，Windows 和 macOS 请用 zip。"
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            gh release upload "$GITHUB_REF_NAME" skip-ad-chrome.zip skip-ad-chrome.crx --clobber
+            gh release edit "$GITHUB_REF_NAME" \
+              --title "Skip Ad ${GITHUB_REF_NAME#v}" \
+              --notes "$NOTES"
+          else
+            gh release create "$GITHUB_REF_NAME" skip-ad-chrome.zip skip-ad-chrome.crx \
+              --title "Skip Ad ${GITHUB_REF_NAME#v}" \
+              --notes "$NOTES" \
+              --generate-notes
+          fi
