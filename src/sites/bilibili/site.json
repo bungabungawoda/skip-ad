@@ -1,0 +1,10 @@
+{
+  "id": "bilibili",
+  "contentMatches": [
+    "https://www.bilibili.com/video/*",
+    "https://www.bilibili.com/list/*"
+  ],
+  "excludeMatches": [],
+  "hostPermissions": ["https://www.bilibili.com/*"],
+  "capabilities": []
+}

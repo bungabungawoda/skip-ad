@@ -1,0 +1,7 @@
+{
+  "id": "youtube",
+  "contentMatches": ["https://www.youtube.com/watch*"],
+  "excludeMatches": [],
+  "hostPermissions": ["https://www.youtube.com/*"],
+  "capabilities": ["platform_ad"]
+}

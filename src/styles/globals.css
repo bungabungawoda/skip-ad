@@ -1,0 +1,282 @@
+@import "tailwindcss";
+
+@custom-variant dark ([data-theme="dark"] &);
+
+/*
+ * 设计 token 唯一来源：designs/extension-ui-system/project/tokens.json
+ * 规则：
+ * - 颜色走两段：原始变量（本文件 :root/:host + [data-theme="dark"]）+ @theme inline 映射。
+ *   @theme inline 让工具类直接引用原始变量，主题切换在 Shadow DOM 里也能生效。
+ * - :host 覆盖内容脚本 Shadow Root：Tailwind v4 的 @theme 变量挂在 :root, :host 上，
+ *   原始变量也挂 :host，播放器浮层才能解析到颜色。
+ * - --spacing 定为 4px 基数（代替 0.25rem），字阶、圆角、阴影全部用像素，
+ *   B 站页面修改 <html> 字号时浮层不会整体缩放。
+ * - 播放器浮层固定深色：外层元素加 class="skipad" data-theme="dark"。
+ */
+
+:root,
+:host {
+  /* 颜色 · 浅色主题（tokens.json color.tokens light） */
+  --background: #ffffff;
+  --surface: #fafafa;
+  --surface-raised: #ffffff;
+  --surface-sunken: #f4f4f5;
+  --foreground: #18181b;
+  --muted-foreground: #63636f;
+  --border: #e4e4e7;
+  --border-strong: #8e8e99;
+  --primary: #18181b;
+  --primary-foreground: #ffffff;
+  --ring: #16a34a;
+  --brand: #16a34a;
+  --brand-ink: #15803d;
+  --brand-soft: #dcfce7;
+  --success: #0f7a5f;
+  --warning: #9a5b08;
+  --danger: #b4232c;
+  --seg-sponsor: #b4232c;
+  --seg-insert: #e07b1a;
+  --seg-promo: #1d4ed8;
+  --seg-self-promo: #eab308;
+  --seg-topic: #8a8a96;
+  --seg-unknown: #0e7490;
+  --player-ground: #101013;
+  --on-player: #f4f4f5;
+
+  /* shadcn/ui 组件别名（浅色） */
+  --card: var(--surface);
+  --card-foreground: var(--foreground);
+  --popover: var(--surface-raised);
+  --popover-foreground: var(--foreground);
+  --secondary: var(--surface-sunken);
+  --secondary-foreground: var(--foreground);
+  --accent: var(--surface-sunken);
+  --accent-foreground: var(--foreground);
+  --destructive: var(--danger);
+  --destructive-foreground: #ffffff;
+  --input: var(--border-strong);
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  /* 颜色 · 深色主题（tokens.json color.tokens dark） */
+  --background: #0b0b0d;
+  --surface: #141416;
+  --surface-raised: #1b1b1f;
+  --surface-sunken: #08080a;
+  --foreground: #f4f4f5;
+  --muted-foreground: #a0a0ac;
+  --border: #2a2a31;
+  --border-strong: #6e6e7a;
+  --primary: #f4f4f5;
+  --primary-foreground: #18181b;
+  --ring: #4ade80;
+  --brand: #4ade80;
+  --brand-ink: #86efac;
+  --brand-soft: #14361f;
+  --success: #5fd3b0;
+  --warning: #f0b44b;
+  --danger: #f4757d;
+  --seg-sponsor: #f2636a;
+  --seg-insert: #f09a3e;
+  --seg-promo: #5b93f0;
+  --seg-self-promo: #e5b949;
+  --seg-topic: #9a9aa6;
+  --seg-unknown: #22d3ee;
+  --player-ground: #101013;
+  --on-player: #f4f4f5;
+
+  /* shadcn/ui 组件别名（深色，重复声明保证在 Shadow DOM 里重新解析） */
+  --card: var(--surface);
+  --card-foreground: var(--foreground);
+  --popover: var(--surface-raised);
+  --popover-foreground: var(--foreground);
+  --secondary: var(--surface-sunken);
+  --secondary-foreground: var(--foreground);
+  --accent: var(--surface-sunken);
+  --accent-foreground: var(--foreground);
+  --destructive: var(--danger);
+  --destructive-foreground: #ffffff;
+  --input: var(--border-strong);
+  color-scheme: dark;
+}
+
+@theme inline {
+  /* 颜色映射：工具类直接引用原始变量 */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-sunken: var(--surface-sunken);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-ring: var(--ring);
+  --color-brand: var(--brand);
+  --color-brand-ink: var(--brand-ink);
+  --color-brand-soft: var(--brand-soft);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+  --color-seg-sponsor: var(--seg-sponsor);
+  --color-seg-insert: var(--seg-insert);
+  --color-seg-promo: var(--seg-promo);
+  --color-seg-self-promo: var(--seg-self-promo);
+  --color-seg-topic: var(--seg-topic);
+  --color-seg-unknown: var(--seg-unknown);
+  --color-player-ground: var(--player-ground);
+  --color-on-player: var(--on-player);
+}
+
+@theme {
+  /* 间距：4px 基数，p-4 = 16px，不随页面 html 字号缩放 */
+  --spacing: 4px;
+
+  /* 字体（tokens.json type.families；v1 不加载远程字体） */
+  --font-sans: Inter, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* 字阶 8 档（tokens.json type.groups Text） */
+  --text-display: 30px;
+  --text-display--line-height: 36px;
+  --text-display--font-weight: 700;
+  --text-display--letter-spacing: -0.02em;
+  --text-title: 20px;
+  --text-title--line-height: 28px;
+  --text-title--font-weight: 600;
+  --text-section: 16px;
+  --text-section--line-height: 24px;
+  --text-section--font-weight: 600;
+  --text-body: 14px;
+  --text-body--line-height: 20px;
+  --text-body--font-weight: 400;
+  --text-label: 13px;
+  --text-label--line-height: 18px;
+  --text-label--font-weight: 500;
+  --text-caption: 12px;
+  --text-caption--line-height: 16px;
+  --text-caption--font-weight: 400;
+  --text-overline: 11px;
+  --text-overline--line-height: 16px;
+  --text-overline--font-weight: 600;
+  --text-overline--letter-spacing: 0.08em;
+  --text-mono: 12px;
+  --text-mono--line-height: 16px;
+  --text-mono--font-weight: 400;
+
+  /* 圆角（tokens.json radius.tokens；Nova 紧凑密度） */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 12px;
+  --radius-full: 999px;
+
+  /* 阴影（tokens.json shadow.tokens） */
+  --shadow-card: 0 1px 2px rgba(24, 24, 27, 0.06);
+  --shadow-popover: 0 8px 24px rgba(11, 11, 13, 0.18);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    @apply bg-background font-sans text-body text-foreground;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+/*
+ * 播放器浮层的 Shadow Root 宿主内包装：
+ * WXT 对宿主元素设置 all: initial，切断继承，这里补回基础排版。
+ * 主题固定深色，由元素上的 data-theme="dark" 接管变量。
+ */
+.skipad {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--foreground);
+}
+
+/*
+ * 播放器 Toast 的动效。
+ * 内容脚本里不用动画库：一份淡入淡出和一条倒计时线不值得为整页多解析 149KB JS。
+ * 时长与曲线来自 designs/extension-ui-system/project/README.md：
+ * toastIn 180ms 从下 8px 淡入，exit 140ms 上移 4px 淡出。
+ */
+@keyframes skipad-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes skipad-toast-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+@keyframes skipad-toast-countdown {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
+
+.skipad-toast {
+  animation: skipad-toast-in 180ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.skipad-toast-leave {
+  animation: skipad-toast-out 140ms ease-in both;
+}
+
+.skipad-toast-countdown {
+  width: 0;
+  animation: skipad-toast-countdown 5s linear both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skipad-toast,
+  .skipad-toast-leave,
+  .skipad-toast-countdown {
+    animation: none;
+  }
+
+  .skipad-toast-leave {
+    opacity: 0;
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "extensionName": {
+    "message": "Skip Video Ad"
+  },
+  "extensionDescription": {
+    "message": "Skips platform ads and sponsored segments in videos on Bilibili and YouTube."
+  },
+  "actionTitle": {
+    "message": "Skip Video Ad"
+  }
+}

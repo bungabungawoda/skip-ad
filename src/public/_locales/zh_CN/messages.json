@@ -1,0 +1,11 @@
+{
+  "extensionName": {
+    "message": "跳过助手"
+  },
+  "extensionDescription": {
+    "message": "自动跳过哔哩哔哩和 YouTube 的平台广告，识别并略过视频内的付费推广片段。"
+  },
+  "actionTitle": {
+    "message": "跳过助手"
+  }
+}
