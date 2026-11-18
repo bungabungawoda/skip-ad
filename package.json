@@ -1,6 +1,6 @@
 {
-  "name": "skip-video-ad",
-  "version": "0.1.0",
+  "name": "skip-ad",
+  "version": "0.1.1",
   "private": true,
   "type": "module",
   "description": "Chrome MV3 extension that skips platform ads and sponsored segments inside videos on Bilibili and YouTube.",

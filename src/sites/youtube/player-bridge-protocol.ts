@@ -7,7 +7,7 @@ import { isRecord, readString } from "../../core/lib/record";
  * 与本功能无关的数据和跟踪字段，不跨世界传。
  */
 
-export const PLAYER_BRIDGE_CHANNEL = "skip-video-ad:player-data:v1";
+export const PLAYER_BRIDGE_CHANNEL = "skip-ad:player-data:v1";
 
 /** 播放器桥允许的数据来源；只用于日志和测试，不参与判定。 */
 export type PlayerDataSource = "app" | "watch" | "player";

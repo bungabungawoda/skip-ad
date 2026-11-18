@@ -400,7 +400,7 @@ function listingMarkdown(zipName) {
   return [
     "# Chrome Web Store 上架素材",
     "",
-    `- 扩展名称：${PACKAGE.name === "skip-video-ad" ? "跳过助手（Skip Video Ad）" : PACKAGE.name}`,
+    `- 扩展名称：${PACKAGE.name === "skip-ad" ? "跳过助手（Skip Ad）" : PACKAGE.name}`,
     `- 版本：${PACKAGE.version}`,
     "- 分类：生产工具 / Productivity",
     "- 语言：中文（简体）与 English（两个语言分别填写商店文案）",
@@ -417,7 +417,7 @@ function listingMarkdown(zipName) {
     "",
     "### 详细描述",
     "",
-    "Skip Video Ad 是一个 Chrome 扩展，帮你在哔哩哔哩和 YouTube 上看视频时少看广告。",
+    "Skip Ad 是一个 Chrome 扩展，帮你在哔哩哔哩和 YouTube 上看视频时少看广告。",
     "",
     "- YouTube 片头广告不用配置，自动跳到结尾；跳不过去就静音快进。",
     "- 视频里由创作者念的推广口播，配置一次自己的 AI 服务后，播放到开头自动跳过。",
@@ -449,7 +449,7 @@ function listingMarkdown(zipName) {
     "",
     "### Detailed description",
     "",
-    "Skip Video Ad is a Chrome extension that reduces the ads you see while watching videos on Bilibili and YouTube.",
+    "Skip Ad is a Chrome extension that reduces the ads you see while watching videos on Bilibili and YouTube.",
     "",
     "- YouTube platform ads need no setup. The extension jumps to the ad's end; if that fails, it plays the ad muted at high speed.",
     "- For sponsored segments spoken by the creator, configure your own AI service once. Playback skips the segment when it starts.",
@@ -501,7 +501,7 @@ function listingMarkdown(zipName) {
     "",
     "与哔哩哔哩、YouTube 无隶属关系。相关名称和商标归各自权利人所有。",
     "",
-    "Skip Video Ad is not affiliated with Bilibili or YouTube. All names and trademarks belong to their respective owners."
+    "Skip Ad is not affiliated with Bilibili or YouTube. All names and trademarks belong to their respective owners."
   ].join("\n");
 }
 
@@ -564,7 +564,7 @@ async function main() {
 
   const chrome = findChrome();
   const port = await freePort();
-  const profile = mkdtempSync(join(tmpdir(), "skip-video-ad-store-"));
+  const profile = mkdtempSync(join(tmpdir(), "skip-ad-store-"));
   const child = spawn(
     chrome,
     [

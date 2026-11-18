@@ -1,8 +1,8 @@
-# Skip Video Ad Privacy Policy and Data Use
+# Skip Ad Privacy Policy and Data Use
 
 Last updated: 2026-11-18
 
-Applies to the Chrome extension **Skip Video Ad** ("the extension").
+Applies to the Chrome extension **Skip Ad** ("the extension").
 
 Project home: <https://github.com/bungabungawoda/skip-ad>
 
@@ -116,11 +116,11 @@ The extension follows the Chrome Web Store User Data Policy's Limited Use requir
 
 ---
 
-# Skip Video Ad 隐私政策与数据使用说明
+# Skip Ad 隐私政策与数据使用说明
 
 最后更新：2026-11-18
 
-适用范围：Chrome 扩展 **Skip Video Ad**（以下简称“本扩展”）。
+适用范围：Chrome 扩展 **Skip Ad**（以下简称“本扩展”）。
 
 项目主页：<https://github.com/bungabungawoda/skip-ad>
 

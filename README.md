@@ -1,4 +1,4 @@
-# Skip Video Ad
+# Skip Ad
 
 [![Tests](https://github.com/bungabungawoda/skip-ad/actions/workflows/test.yml/badge.svg)](https://github.com/bungabungawoda/skip-ad/actions/workflows/test.yml)
 [![Build](https://github.com/bungabungawoda/skip-ad/actions/workflows/build.yml/badge.svg)](https://github.com/bungabungawoda/skip-ad/actions/workflows/build.yml)

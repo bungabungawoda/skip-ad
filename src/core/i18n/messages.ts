@@ -361,7 +361,7 @@ const zh = {
 export type MessageKey = keyof typeof zh;
 
 const en: Record<MessageKey, string> = {
-  "app.name": "Skip Video Ad",
+  "app.name": "Skip Ad",
   "common.settings": "Settings",
   "common.cancel": "Cancel",
   "common.retry": "Retry",
