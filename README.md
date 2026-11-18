@@ -15,9 +15,9 @@
 
 不想自己敲命令，可以把下面这句话发给你常用的编程助手（Codex、Claude Code 等）：
 
-> 按 https://github.com/bungabungawoda/skip-ad 里的安装技能，帮我配置 magpie 并装好扩展。
+> 按 https://github.com/bungabungawoda/skip-ad 里的安装技能，帮我装好扩展。
 
-助手会读取仓库里的 [安装技能](skills/install-skip-ad/SKILL.md)，装好 magpie、拉取代码并构建。最后你只需要在 Chrome 的扩展页点「加载已解压的扩展程序」，选择 `output/chrome-mv3`。
+助手会读取仓库里的 [安装技能](skills/install-skip-ad/SKILL.md)，先问你有没有自己的模型 API Key：有就直接用你的 Key；没有会先说明 magpie 是什么、有什么风险，得到你同意后才安装。之后它会拉取代码并构建。最后你只需要在 Chrome 的扩展页点「加载已解压的扩展程序」，选择 `output/chrome-mv3`。
 
 ### 手动安装
 
@@ -85,6 +85,8 @@ Key 只保存在你这台电脑的浏览器里；发起请求时，Key 会发给
 3. 模型名填 `magpie models` 打印的完整 id，例如 `deepseek/deepseek-v4-pro` 或 `group/xxx`，点「连接」。
 
 扩展只连本机地址，不经过扩展作者的服务器。请求最终发给谁，取决于你在 magpie 里配置的服务商或本地模型。
+
+magpie 是第三方软件，会读取本机 AI 应用已经登录的账号来转发请求。用它给别的程序发请求，可能不符合服务商的使用条款，存在被限流或封号的风险，装之前请自己确认。
 
 ## 权限与隐私
 
