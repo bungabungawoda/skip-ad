@@ -45,6 +45,7 @@ const okBody = {
 };
 
 const typesafeOkBody = {
+  model: "jev-1.14.0",
   answers: {
     is_ad: { type: "noul", noul: 0.93 },
     kind: {
@@ -53,7 +54,8 @@ const typesafeOkBody = {
       probabilities: { sponsor: 0.93, topic: 0.07 },
       confidence: 0.93
     }
-  }
+  },
+  usage: { input_tokens: 338, output_tokens: 21 }
 };
 
 const input = [{ type: "text" as const, text: "00:00-01:00 本期视频由赞助商提供" }];
@@ -282,6 +284,152 @@ describe("决策客户端", () => {
     const client = createDecisionClient(connection, { fetchImpl: fetchMock, sleep: async () => undefined });
     await expect(client.decide({ input, questions })).rejects.toMatchObject({ kind: "auth" });
     expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("TypeSafe 400 取 detail.message 作为提示", async () => {
+    const fetchMock = vi.fn<FetchLike>(async () =>
+      jsonResponse(
+        {
+          detail: {
+            error_type: "api_usage_error",
+            message: "Unknown model: jev-does-not-exist"
+          }
+        },
+        400
+      )
+    );
+    const client = createDecisionClient(typesafeConnection, {
+      fetchImpl: fetchMock,
+      sleep: async () => undefined
+    });
+    await expect(client.decide({ input, questions })).rejects.toMatchObject({
+      kind: "bad_request",
+      status: 400,
+      message: "决策请求失败（400）：Unknown model: jev-does-not-exist"
+    });
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("TypeSafe 401 取 detail.message 且不重试", async () => {
+    const fetchMock = vi.fn<FetchLike>(async () =>
+      jsonResponse(
+        {
+          detail: {
+            error_type: "authentication_error",
+            message: "Cannot authenticate with the server. Please check your API key and try again."
+          }
+        },
+        401
+      )
+    );
+    const client = createDecisionClient(typesafeConnection, {
+      fetchImpl: fetchMock,
+      sleep: async () => undefined
+    });
+    await expect(client.decide({ input, questions })).rejects.toMatchObject({
+      kind: "auth",
+      message: expect.stringContaining("Please check your API key")
+    });
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("422 的校验错误按字段位置拼成提示", async () => {
+    const fetchMock = vi.fn<FetchLike>(async () =>
+      jsonResponse(
+        {
+          detail: [
+            {
+              type: "json_invalid",
+              loc: ["body", 9],
+              msg: "JSON decode error",
+              input: "{}",
+              ctx: { error: "Expecting value" }
+            },
+            {
+              type: "missing",
+              loc: ["body", "questions", "kind", "choice", "criteria"],
+              msg: "Field required",
+              input: '{"type":"choice"}'
+            }
+          ]
+        },
+        422
+      )
+    );
+    const client = createDecisionClient(typesafeConnection, {
+      fetchImpl: fetchMock,
+      sleep: async () => undefined
+    });
+    await expect(client.decide({ input, questions })).rejects.toMatchObject({
+      kind: "bad_request",
+      message: expect.stringContaining(
+        "body.9: JSON decode error; body.questions.kind.choice.criteria: Field required"
+      )
+    });
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("413 表示请求体过大，不重试", async () => {
+    const fetchMock = vi.fn<FetchLike>(async () =>
+      jsonResponse({ detail: "Request body too large" }, 413)
+    );
+    const client = createDecisionClient(typesafeConnection, {
+      fetchImpl: fetchMock,
+      sleep: async () => undefined
+    });
+    await expect(client.decide({ input, questions })).rejects.toMatchObject({
+      kind: "bad_request",
+      status: 413,
+      message: expect.stringContaining("Request body too large")
+    });
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("529 过载从 1 秒起翻倍等待再重试", async () => {
+    const fetchMock = vi
+      .fn<FetchLike>()
+      .mockResolvedValueOnce(jsonResponse({ detail: "Overloaded" }, 529))
+      .mockResolvedValueOnce(jsonResponse({ detail: "Overloaded" }, 529))
+      .mockResolvedValueOnce(jsonResponse(typesafeOkBody));
+    const sleep = vi.fn(async (ms: number) => {
+      void ms;
+    });
+    const client = createDecisionClient(typesafeConnection, { fetchImpl: fetchMock, sleep });
+    const result = await client.decide({ input, questions });
+    expect(result.answers.is_ad).toMatchObject({ noul: 0.93 });
+    expect(sleep.mock.calls.map(([ms]) => ms)).toEqual([1_000, 2_000]);
+  });
+
+  it("Google 的错误正文取 error.message", async () => {
+    const fetchMock = vi.fn<FetchLike>(async () =>
+      jsonResponse(
+        { error: { code: 400, message: "API key not valid. Please pass a valid API key.", status: "INVALID_ARGUMENT" } },
+        400
+      )
+    );
+    const client = createDecisionClient(connection, {
+      fetchImpl: fetchMock,
+      sleep: async () => undefined
+    });
+    await expect(client.decide({ input, questions })).rejects.toMatchObject({
+      kind: "bad_request",
+      message: "决策请求失败（400）：API key not valid. Please pass a valid API key."
+    });
+  });
+
+  it("错误正文不是 JSON 时保留截断后的原文", async () => {
+    const fetchMock = vi.fn<FetchLike>(
+      async () => new Response("upstream exploded", { status: 502 })
+    );
+    const client = createDecisionClient(typesafeConnection, {
+      fetchImpl: fetchMock,
+      sleep: async () => undefined,
+      retry: false
+    });
+    await expect(client.decide({ input, questions })).rejects.toMatchObject({
+      kind: "server",
+      message: "决策请求失败（502）：upstream exploded"
+    });
   });
 
   it("5xx 按累计等待预算重试", async () => {

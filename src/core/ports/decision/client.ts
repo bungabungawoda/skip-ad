@@ -13,7 +13,12 @@ import { safeEndpoint, type FetchLike } from "../../lib/http";
 import { errorText } from "../../lib/error";
 import { logWarn } from "../../lib/log";
 import { isRecord } from "../../lib/record";
-import { classifyHttpStatus, retryAfterFromDetail, retryAfterMs } from "../http-status";
+import {
+  classifyHttpStatus,
+  errorMessageFromDetail,
+  retryAfterFromDetail,
+  retryAfterMs
+} from "../http-status";
 import { LlmError, ReplyShapeError } from "../llm/errors";
 import {
   classifyThrown,
@@ -63,6 +68,10 @@ interface DecisionClientDeps {
 const DEFAULT_TIMEOUT_MS = 60_000;
 const RETRY_DELAY_MS = 1_000;
 const TYPESAFE_RATE_LIMIT_DELAY_MS = 30_000;
+/** 529 表示服务过载，文档要求退避重试；从 1 秒起翻倍，最多等 30 秒。 */
+const OVERLOAD_BASE_DELAY_MS = 1_000;
+const OVERLOAD_MAX_DELAY_MS = 30_000;
+const ERROR_DETAIL_CHARS = 300;
 
 const DECISION_LABELS: RequestLabels = {
   cancelled: "决策请求已取消",
@@ -213,8 +222,12 @@ function rateLimitDelayMs(
   status: number,
   protocol: DecisionProtocol,
   detail: string,
-  response: Response
+  response: Response,
+  attemptIndex: number
 ): number | undefined {
+  if (status === 529) {
+    return Math.min(OVERLOAD_BASE_DELAY_MS * 2 ** attemptIndex, OVERLOAD_MAX_DELAY_MS);
+  }
   if (status !== 429) return undefined;
   if (protocol === "typesafe") return TYPESAFE_RATE_LIMIT_DELAY_MS;
   return retryAfterFromDetail(detail) ?? retryAfterMs(response);
@@ -225,6 +238,7 @@ interface AttemptInput {
   request: DecisionRequest;
   timeoutMs: number;
   fetchImpl: FetchLike;
+  attemptIndex: number;
 }
 
 type AttemptOutcome =
@@ -260,17 +274,24 @@ async function attempt(input: AttemptInput): Promise<AttemptOutcome> {
     });
     if (!response.ok) {
       const detail = await readErrorDetail(response, "读取决策接口错误响应体失败");
-      const truncated = detail.slice(0, 300);
-      const kind = classifyHttpStatus(response.status, truncated);
+      // 分类看完整正文，提示只取正文里的一句话。
+      const message = errorMessageFromDetail(detail) ?? detail.trim().slice(0, ERROR_DETAIL_CHARS);
+      const kind = classifyHttpStatus(response.status, detail);
       const error = new LlmError(
-        `决策请求失败（${response.status}）${truncated ? `：${truncated}` : ""}`,
+        `决策请求失败（${response.status}）${message ? `：${message}` : ""}`,
         kind,
         response.status
       );
       return {
         ok: false,
         error,
-        retryAfter: rateLimitDelayMs(response.status, protocol, detail, response)
+        retryAfter: rateLimitDelayMs(
+          response.status,
+          protocol,
+          detail,
+          response,
+          input.attemptIndex
+        )
       };
     }
     const rawText = await response.text();
@@ -312,7 +333,8 @@ export function createDecisionClient(
           connection,
           request,
           timeoutMs,
-          fetchImpl
+          fetchImpl,
+          attemptIndex: index
         });
         if (outcome.ok) return outcome.result;
         if (!retry || !shouldRetry(outcome.error.kind)) {

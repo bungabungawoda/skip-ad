@@ -6,8 +6,10 @@
  */
 
 import type { LlmErrorKind } from "./llm/errors";
+import { isRecord } from "../lib/record";
 
 const MODEL_NOT_FOUND = /model_not_found|model[^\n]{0,40}(not found|does not exist|unknown)/i;
+const MAX_ERROR_MESSAGE_CHARS = 300;
 
 export function classifyHttpStatus(status: number, detail: string): LlmErrorKind {
   if (status === 401 || status === 403) return "auth";
@@ -42,4 +44,59 @@ export function retryAfterFromDetail(detail: string): number | undefined {
   if (!match) return undefined;
   const seconds = Number(match[1]);
   return Number.isFinite(seconds) && seconds >= 0 ? Math.round(seconds * 1000) : undefined;
+}
+
+function cleanText(value: unknown): string | undefined {
+  if (typeof value !== "string") return undefined;
+  const text = value.trim();
+  return text ? text.slice(0, MAX_ERROR_MESSAGE_CHARS) : undefined;
+}
+
+/** 422 的校验错误逐条写成「字段路径: 原因」，太多就只留前三条。 */
+function validationEntry(value: unknown): string | undefined {
+  if (!isRecord(value)) return undefined;
+  const message = cleanText(value.msg);
+  if (!message) return undefined;
+  const path = Array.isArray(value.loc)
+    ? value.loc
+        .filter((part) => typeof part === "string" || typeof part === "number")
+        .join(".")
+    : "";
+  return path ? `${path}: ${message}` : message;
+}
+
+function detailMessage(detail: unknown): string | undefined {
+  if (typeof detail === "string") return cleanText(detail);
+  if (Array.isArray(detail)) {
+    const messages = detail
+      .map(validationEntry)
+      .filter((entry): entry is string => entry !== undefined)
+      .slice(0, 3);
+    return messages.length > 0 ? messages.join("; ") : undefined;
+  }
+  if (isRecord(detail)) return cleanText(detail.message) ?? cleanText(detail.msg);
+  return undefined;
+}
+
+/**
+ * 从错误正文里取一句能给人看的话。
+ *
+ * TypeSafe 的错误正文是 `{"detail": ...}`：字符串、带 `message` 的对象，
+ * 或 422 校验失败时的数组。Google 和常见网关则是 `{"error": {"message": ...}}`
+ * 或 `{"message": ...}`。取不到就返回 undefined，让调用方退回正文原文。
+ */
+export function errorMessageFromDetail(detail: string): string | undefined {
+  let payload: unknown;
+  try {
+    payload = JSON.parse(detail);
+  } catch {
+    return undefined;
+  }
+  if (!isRecord(payload)) return undefined;
+  const nestedError = payload.error;
+  return (
+    detailMessage(payload.detail) ??
+    (isRecord(nestedError) ? cleanText(nestedError.message) : cleanText(nestedError)) ??
+    cleanText(payload.message)
+  );
 }
