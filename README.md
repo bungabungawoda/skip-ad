@@ -66,6 +66,16 @@ Key 只保存在你这台电脑的浏览器里；发起请求时，Key 会发给
 
 如果你有 Jev（TypeSafe）或 Google 决策模型的 API Key，可以在同一页填写「决策模型」的接口、Key 和模型名。目前支持 Google Gemini 和 TypeSafe 两种请求格式，扩展按接口地址自动识别。TypeSafe 填 `https://api.typesafe.ai/v1/systemone`，模型名填 `jev-latest`，Key 填 TypeSafe 给你的 Key。填了会优先用它；请求失败时本次分析会停止，不会自动改用上面的服务。
 
+### 用 magpie 省掉 API Key
+
+不想申请模型 API Key，可以先在本机运行 [magpie](https://usemagpie.ai)。它提供一个本地接口，把扩展的请求转给你在 magpie 里配置的模型或已经登录的账号，Key 可以留空。
+
+1. 启动 magpie，在它的界面里添加一个可用的模型。
+2. 回到扩展设置页，把「API 地址」填成 `http://127.0.0.1:3425/v1`，Key 留空。
+3. 模型名填 magpie 里显示的「服务商/模型」，例如 `deepseek/deepseek-v4-pro`，点「连接」。
+
+扩展只连本机地址，不经过扩展作者的服务器。请求最终发给谁，取决于你在 magpie 里配置的服务商或本地模型。
+
 ## 权限与隐私
 
 扩展申请本地存储、哔哩哔哩和 YouTube 视频页访问权限，以及内置服务商的 AI 接口地址。第一次连接自定义服务地址时会单独询问。不读取 Cookie，不需要你的登录态。
