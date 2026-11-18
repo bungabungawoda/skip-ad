@@ -11,17 +11,21 @@
 
 ## 安装
 
+### 下载安装包
+
+到 [Releases](https://github.com/bungabungawoda/skip-ad/releases/latest) 下载 `skip-ad-chrome.zip`，解压出 `skip-ad-chrome` 文件夹。打开 `chrome://extensions`，开启右上角的「开发者模式」，点「加载已解压的扩展程序」，选择这个文件夹。第一次安装会自动打开设置页。
+
 ### 一句话装好
 
 不想自己敲命令，可以把下面这句话发给你常用的编程助手（Codex、Claude Code 等）：
 
 > 按 https://github.com/bungabungawoda/skip-ad 里的安装技能，帮我装好扩展。
 
-助手会读取仓库里的 [安装技能](skills/install-skip-ad/SKILL.md)，先问你有没有自己的模型 API Key：有就直接用你的 Key；没有会先说明 magpie 是什么、有什么风险，得到你同意后才安装。之后它会拉取代码并构建。最后你只需要在 Chrome 的扩展页点「加载已解压的扩展程序」，选择 `output/chrome-mv3`。
+助手会读取仓库里的 [安装技能](skills/install-skip-ad/SKILL.md)，先问你有没有自己的模型 API Key：有就直接用你的 Key；没有会先说明 magpie 是什么、有什么风险，得到你同意后才安装。它还会下载发布包并解压，最后你只需要在 Chrome 的扩展页点「加载已解压的扩展程序」，选择 `skip-ad-chrome` 文件夹。
 
-### 手动安装
+### 手动构建
 
-需要 Node 22.13 以上和 Chrome 120 以上。在项目目录里运行：
+想自己改代码时，需要 Node 22.13 以上和 Chrome 120 以上。在项目目录里运行：
 
 ```bash
 npm install

@@ -1,6 +1,6 @@
 ---
 name: install-skip-ad
-description: 一句话装好跳过广告扩展（skip-ad）：先确认用户有没有自己的模型 API Key，再决定是否安装 magpie 本地代理，然后拉取代码构建 Chrome 扩展并给出加载和连接步骤。当用户要安装、更新或重新配置 skip-ad、跳过广告扩展时调用。
+description: 一句话装好跳过广告扩展（skip-ad）：先确认用户有没有自己的模型 API Key，再决定是否安装 magpie 本地代理，然后下载发布包并给出加载和连接步骤。当用户要安装、更新或重新配置 skip-ad、跳过广告扩展时调用。
 ---
 
 # 一句话装好跳过广告扩展

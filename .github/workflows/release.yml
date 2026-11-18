@@ -1,0 +1,54 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Package and publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.13.0"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build release configuration
+        run: npm run build:release
+
+      - name: Check version matches tag
+        run: |
+          node -e "const m=require('./output/chrome-mv3-release/manifest.json'); if ('v'+m.version !== process.env.GITHUB_REF_NAME) { console.error('manifest version '+m.version+' does not match '+process.env.GITHUB_REF_NAME); process.exit(1); }"
+
+      - name: Package extension
+        run: |
+          mkdir -p package/skip-ad-chrome
+          cp -R output/chrome-mv3-release/. package/skip-ad-chrome/
+          cd package
+          zip -r "$GITHUB_WORKSPACE/skip-ad-chrome.zip" skip-ad-chrome
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" skip-ad-chrome.zip \
+            --title "Skip Video Ad ${GITHUB_REF_NAME#v}" \
+            --generate-notes
