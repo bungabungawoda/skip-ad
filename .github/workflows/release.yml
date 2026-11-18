@@ -51,4 +51,5 @@ jobs:
         run: |
           gh release create "$GITHUB_REF_NAME" skip-ad-chrome.zip \
             --title "Skip Video Ad ${GITHUB_REF_NAME#v}" \
+            --notes "安装：下载 skip-ad-chrome.zip，解压后在 chrome://extensions 开启开发者模式，点「加载已解压的扩展程序」，选择 skip-ad-chrome 文件夹。" \
             --generate-notes

@@ -11,9 +11,15 @@
 
 ## 安装
 
+普通用户不用安装 Node，也不用自己构建，直接下载发布包即可。
+
 ### 下载安装包
 
 到 [Releases](https://github.com/bungabungawoda/skip-ad/releases/latest) 下载 `skip-ad-chrome.zip`，解压出 `skip-ad-chrome` 文件夹。打开 `chrome://extensions`，开启右上角的「开发者模式」，点「加载已解压的扩展程序」，选择这个文件夹。第一次安装会自动打开设置页。
+
+### 更新
+
+到同一个页面下载新版 `skip-ad-chrome.zip`，覆盖原来的 `skip-ad-chrome` 文件夹，然后在 `chrome://extensions` 里点扩展卡片上的刷新按钮。
 
 ### 一句话装好
 
@@ -23,16 +29,7 @@
 
 助手会读取仓库里的 [安装技能](skills/install-skip-ad/SKILL.md)，先问你有没有自己的模型 API Key：有就直接用你的 Key；没有会先说明 magpie 是什么、有什么风险，得到你同意后才安装。它还会下载发布包并解压，最后你只需要在 Chrome 的扩展页点「加载已解压的扩展程序」，选择 `skip-ad-chrome` 文件夹。
 
-### 手动构建
-
-想自己改代码时，需要 Node 22.13 以上和 Chrome 120 以上。在项目目录里运行：
-
-```bash
-npm install
-npm run build
-```
-
-然后打开 `chrome://extensions`，开启右上角的「开发者模式」，点「加载已解压的扩展程序」，选择项目里的 `output/chrome-mv3` 文件夹。第一次安装会自动打开设置页。
+想自己改代码或从源码构建，见下面的「开发与发布」。
 
 ## 快速上手
 
@@ -101,6 +98,15 @@ magpie 是第三方软件，会读取本机 AI 应用已经登录的账号来转
 完整的隐私政策、数据使用说明和同意方式见 [PRIVACY.md](PRIVACY.md)。
 
 ## 开发与发布
+
+从源码构建扩展，需要 Node 22.13 以上：
+
+```bash
+npm install
+npm run build
+```
+
+构建结果在 `output/chrome-mv3`，在 `chrome://extensions` 里加载这个文件夹。第一次安装会自动打开设置页。
 
 常用命令：
 
