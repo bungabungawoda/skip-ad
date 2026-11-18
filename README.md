@@ -89,6 +89,11 @@ npm run store:assets
 
 这个命令会构建扩展、生成商店规格的截图和促销图，并输出到 `release/`。脚本默认查找 Chrome for Testing；找不到时用 `CHROME_PATH` 指定浏览器可执行文件。
 
+
+
+
+
+
 ## 许可证
 
 本项目代码使用 [MIT License](LICENSE)。第三方组件继续适用各自的许可证。

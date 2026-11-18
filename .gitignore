@@ -15,6 +15,6 @@ designs/
 eval/
 .adversarial-tdd/
 .chrome-e2e-profile/
-docs/
+docs/drafts/
 AGENTS.md
 CLAUDE.md
