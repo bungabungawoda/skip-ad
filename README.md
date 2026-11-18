@@ -17,7 +17,7 @@
 
 到 [Releases](https://github.com/bungabungawoda/skip-ad/releases/latest) 下载 `skip-ad-chrome.zip`，解压出 `skip-ad-chrome` 文件夹。打开 `chrome://extensions`，开启右上角的「开发者模式」，点「加载已解压的扩展程序」，选择这个文件夹。第一次安装会自动打开设置页。
 
-Release 里也附带 `skip-ad-chrome.crx`。它只能在 Linux 的 Chrome 或企业策略下安装；Windows 和 macOS 的普通 Chrome 会拒绝非商店 CRX，请用上面的 zip。
+Release 里也附带 `skip-ad-chrome.crx`，但它是自己签名的，没有 Chrome 应用商店的校验标记。Windows 和 macOS 的 Chrome 会拒绝安装；从应用商店下载的 CRX 带校验标记，所以能装。这份 CRX 只适合 Linux 的 Chrome 或企业策略设备，普通用户请用上面的 zip。
 
 ### 更新
 
