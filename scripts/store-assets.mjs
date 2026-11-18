@@ -383,7 +383,7 @@ function promoHtml(iconImage) {
   <div class="top">
     <img class="icon" alt="" src="data:image/png;base64,${iconImage}">
     <div>
-      <div class="brand">SKIP VIDEO AD</div>
+      <div class="brand">SKIP AD</div>
       <div class="title">自动跳过视频广告</div>
       <div class="sub">平台广告 + 视频内推广片段</div>
     </div>
