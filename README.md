@@ -2,6 +2,7 @@
 
 [![Tests](https://github.com/bungabungawoda/skip-ad/actions/workflows/test.yml/badge.svg)](https://github.com/bungabungawoda/skip-ad/actions/workflows/test.yml)
 [![Build](https://github.com/bungabungawoda/skip-ad/actions/workflows/build.yml/badge.svg)](https://github.com/bungabungawoda/skip-ad/actions/workflows/build.yml)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 一个 Chrome 扩展，帮你在哔哩哔哩和 YouTube 上看视频时跳过广告：
 
