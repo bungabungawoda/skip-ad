@@ -23,7 +23,7 @@ describe("interface locale", () => {
   });
 
   it("uses the test navigator language and translates variables", () => {
-    expect(t("app.name")).toBe("跳过助手");
+    expect(t("app.name")).toBe("Skip Ad");
     expect(t("common.seconds", { count: 3 })).toBe("3 秒");
     expect(translate("en", "common.seconds", { count: 3 })).toBe("3s");
   });
@@ -56,7 +56,8 @@ describe("interface locale", () => {
       expect(file.extensionDescription?.message.length).toBeGreaterThan(0);
       expect(file.actionTitle?.message.length).toBeGreaterThan(0);
     }
-    expect(zh.extensionName?.message).toMatch(/[\u4e00-\u9fff]/);
+    expect(zh.extensionName?.message).toBe("Skip Ad");
+    expect(zh.extensionDescription?.message).toMatch(/[\u4e00-\u9fff]/);
     expect(en.extensionName?.message).not.toMatch(/[\u4e00-\u9fff]/);
   });
 });

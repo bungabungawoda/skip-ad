@@ -3,6 +3,7 @@
 [![Tests](https://github.com/bungabungawoda/skip-ad/actions/workflows/test.yml/badge.svg)](https://github.com/bungabungawoda/skip-ad/actions/workflows/test.yml)
 [![Build](https://github.com/bungabungawoda/skip-ad/actions/workflows/build.yml/badge.svg)](https://github.com/bungabungawoda/skip-ad/actions/workflows/build.yml)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Chrome Web Store](https://img.shields.io/badge/Chrome%20Web%20Store-Skip%20Ad-4285F4?logo=googlechrome&logoColor=white)](https://chromewebstore.google.com/detail/skip-ad/jgakklgonpopejbmlpidfjhjmhgjbmpa)
 
 一个 Chrome 扩展，帮你在哔哩哔哩和 YouTube 上看视频时跳过广告：
 
@@ -11,17 +12,21 @@
 
 ## 安装
 
-普通用户不用安装 Node，也不用自己构建，直接下载发布包即可。
+普通用户不用安装 Node，也不用自己构建。优先从 Chrome 应用商店安装。
+
+### 从 Chrome 应用商店安装
+
+打开 [Chrome 应用商店](https://chromewebstore.google.com/detail/skip-ad/jgakklgonpopejbmlpidfjhjmhgjbmpa) 安装。商店版会自动更新，适合普通用户。
 
 ### 下载安装包
 
-到 [Releases](https://github.com/bungabungawoda/skip-ad/releases/latest) 下载 `skip-ad-chrome.zip`，解压出 `skip-ad-chrome` 文件夹。打开 `chrome://extensions`，开启右上角的「开发者模式」，点「加载已解压的扩展程序」，选择这个文件夹。第一次安装会自动打开设置页。
+如果商店打不开，到 [Releases](https://github.com/bungabungawoda/skip-ad/releases/latest) 下载 `skip-ad-chrome.zip`，解压出 `skip-ad-chrome` 文件夹。打开 `chrome://extensions`，开启右上角的「开发者模式」，点「加载已解压的扩展程序」，选择这个文件夹。第一次安装会自动打开设置页。
 
 Release 里也附带 `skip-ad-chrome.crx`，但它是自己签名的，没有 Chrome 应用商店的校验标记。Windows 和 macOS 的 Chrome 会拒绝安装；从应用商店下载的 CRX 带校验标记，所以能装。这份 CRX 只适合 Linux 的 Chrome 或企业策略设备，普通用户请用上面的 zip。
 
 ### 更新
 
-到同一个页面下载新版 `skip-ad-chrome.zip`，覆盖原来的 `skip-ad-chrome` 文件夹，然后在 `chrome://extensions` 里点扩展卡片上的刷新按钮。
+从 Chrome 应用商店安装的版本由浏览器自动更新，不需要手动操作。手动安装的版本到 [Releases](https://github.com/bungabungawoda/skip-ad/releases/latest) 下载新版 `skip-ad-chrome.zip`，覆盖原来的 `skip-ad-chrome` 文件夹，然后在 `chrome://extensions` 里点扩展卡片上的刷新按钮。
 
 ### 一句话装好
 

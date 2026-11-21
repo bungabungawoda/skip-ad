@@ -400,7 +400,7 @@ function listingMarkdown(zipName) {
   return [
     "# Chrome Web Store 上架素材",
     "",
-    `- 扩展名称：${PACKAGE.name === "skip-ad" ? "跳过助手（Skip Ad）" : PACKAGE.name}`,
+    `- 扩展名称：${PACKAGE.name === "skip-ad" ? "Skip Ad" : PACKAGE.name}`,
     `- 版本：${PACKAGE.version}`,
     "- 分类：生产工具 / Productivity",
     "- 语言：中文（简体）与 English（两个语言分别填写商店文案）",

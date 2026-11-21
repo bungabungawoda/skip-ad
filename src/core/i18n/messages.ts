@@ -6,7 +6,7 @@
  */
 
 const zh = {
-  "app.name": "跳过助手",
+  "app.name": "Skip Ad",
   "common.settings": "设置",
   "common.cancel": "取消",
   "common.retry": "重试",
