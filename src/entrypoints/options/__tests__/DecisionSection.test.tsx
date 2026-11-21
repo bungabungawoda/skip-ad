@@ -111,8 +111,8 @@ function buttonByText(el: HTMLElement, text: string): HTMLButtonElement {
 describe("决策模型设置", () => {
   it("地址留空时说明使用 LLM", async () => {
     const view = await renderSection();
-    expect(view.textContent).toContain("只使用上面配置的模型");
-    expect(view.textContent).toContain("地址留空就用上面配置的模型");
+    expect(view.textContent).toContain("只使用 LLM");
+    expect(view.textContent).toContain("地址留空就只用 LLM");
   });
 
   it("收到设置变化后刷新 LLM 连接状态", async () => {
@@ -196,7 +196,7 @@ describe("决策模型设置", () => {
       type: "settings.setDecisionConfig",
       patch: { endpoint: "", apiKey: "key", model: DEFAULT_DECISION_MODEL }
     });
-    expect(view.textContent).toContain("只使用上面配置的模型");
+    expect(view.textContent).toContain("只使用 LLM");
   });
 
   it("读取失败时显示原因，不一直停在加载态", async () => {

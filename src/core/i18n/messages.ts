@@ -72,7 +72,7 @@ const zh = {
 
   "decision.title": "决策模型",
   "decision.description":
-    "填了完整接口地址就优先用决策模型，支持 Google Gemini 和 TypeSafe。地址留空就用上面配置的模型。两个都填时，由下面的开关决定用哪一条；选中的那条请求失败时会报错，不会自动换成另一条。",
+    "填了完整接口地址就启用决策模型，支持 Google Gemini 和 TypeSafe。地址留空就只用 LLM。两个都填时，由下面的开关决定先用哪一条；选中的那条请求失败时会报错，不会自动换成另一条。",
   "decision.usedByBoth": "决策模型对哔哩哔哩和 YouTube 都生效。",
   "decision.endpoint": "接口地址",
   "decision.endpointHint":
@@ -81,19 +81,19 @@ const zh = {
   "decision.keyPlaceholder": "可以留空",
   "decision.keyHint": "TypeSafe 必须填 Key；本机网关通常不需要 Key。",
   "decision.model": "模型名",
-  "decision.preferLlm": "优先用上面配置的模型",
+  "decision.preferLlm": "优先用 LLM",
   "decision.preferLlmHint": "打开后先用 LLM；关掉时默认先用决策模型。",
   "decision.save": "保存决策模型设置",
   "decision.saving": "正在保存…",
   "decision.saved": "已保存",
   "decision.state.llmFirst": "LLM 优先",
   "decision.state.decisionFirst": "决策模型优先",
-  "decision.state.llmOnly": "只使用上面配置的模型",
+  "decision.state.llmOnly": "只使用 LLM",
   "decision.readError": "决策模型设置读取失败，请刷新页面重试",
   "decision.invalidEndpoint":
     "接口地址要填完整 URL。只允许 https，本机网关可以用 http://127.0.0.1 或 http://localhost。",
   "decision.unauthorized":
-    "设置已保存，但浏览器没有授予接口访问权限；请求会失败。请重新授权，或改用上面配置的模型。",
+    "设置已保存，但浏览器没有授予接口访问权限；请求会失败。请重新授权，或改用 LLM。",
   "decision.saveFailed": "保存失败",
   "decision.privacyNote":
     "决策模型的输入会被服务商用于改进产品；台词和弹幕是公开数据，介意就留空这一项。",
@@ -169,7 +169,7 @@ const zh = {
   "privacy.youtubeNote":
     "平台广告跳过只看播放器状态，不发送任何内容；没有可用字幕时不分析正文。",
   "privacy.decisionNote":
-    "在设置页填写决策模型接口后，哔哩哔哩和 YouTube 会优先把同一份字幕发给它。接口请求失败时，本次分析会失败，不会把内容自动转给另一个模型。地址、Key 与模型名只保存在本机，可随时清空；请求时只发给你选定的服务商。",
+    "在设置页填写决策模型接口后，哔哩哔哩和 YouTube 会把同一份字幕发给它；两个模型都配置时，由设置页的开关决定先用 LLM 还是决策模型。选中的那条请求失败时，本次分析会失败，不会把内容自动转给另一个模型。地址、Key 与模型名只保存在本机，可随时清空；请求时只发给你选定的服务商。",
   "privacy.permissions": "权限清单",
   "privacy.permission.local": "申请的权限 · 只有本地保存（用来存设置和 Key）",
   "privacy.permission.sites": "允许访问的网站 · www.bilibili.com、www.youtube.com 与内置 AI 服务商",
@@ -434,7 +434,7 @@ const en: Record<MessageKey, string> = {
 
   "decision.title": "Decision model",
   "decision.description":
-    "If you enter a full endpoint URL, this model decides which segments are ads. Google Gemini and TypeSafe are supported. Leave it empty to use the model above. When both are configured, the switch below decides which one runs. If the selected one fails, analysis stops and does not fall back.",
+    "Enter a full endpoint URL to enable the decision model (Google Gemini or TypeSafe). Leave it empty to use only the LLM. When both are configured, the switch below decides which one runs first. If the selected one fails, analysis stops and does not fall back.",
   "decision.usedByBoth": "The decision model applies to both Bilibili and YouTube.",
   "decision.endpoint": "Endpoint URL",
   "decision.endpointHint":
@@ -444,21 +444,21 @@ const en: Record<MessageKey, string> = {
   "decision.keyHint":
     "TypeSafe requires a key. Local gateways usually need none.",
   "decision.model": "Model name",
-  "decision.preferLlm": "Prefer the model above",
+  "decision.preferLlm": "Prefer the LLM",
   "decision.preferLlmHint":
-    "When on, the model above runs first. When off, the decision model runs first.",
+    "When on, the LLM runs first. When off, the decision model runs first.",
   "decision.save": "Save decision model",
   "decision.saving": "Saving…",
   "decision.saved": "Saved",
-  "decision.state.llmFirst": "Model above first",
+  "decision.state.llmFirst": "LLM first",
   "decision.state.decisionFirst": "Decision model first",
-  "decision.state.llmOnly": "Only the model above",
+  "decision.state.llmOnly": "Only use the LLM",
   "decision.readError":
     "Could not read the decision model settings. Refresh the page and try again.",
   "decision.invalidEndpoint":
     "Enter a full URL. Only https is allowed; a local gateway can use http://127.0.0.1 or http://localhost.",
   "decision.unauthorized":
-    "Settings saved, but the browser did not grant access to this endpoint. Requests will fail. Grant access again or use the model above.",
+    "Settings saved, but the browser did not grant access to this endpoint. Requests will fail. Grant access again or use the LLM.",
   "decision.saveFailed": "Could not save",
   "decision.privacyNote":
     "The provider may use decision-model input to improve its products. Transcripts and comments are public content; leave this empty if that concerns you.",
@@ -541,7 +541,7 @@ const en: Record<MessageKey, string> = {
   "privacy.youtubeNote":
     "Platform-ad skipping reads only player state and sends nothing. If no captions are available, the transcript is not analyzed.",
   "privacy.decisionNote":
-    "If you configure a decision-model endpoint, Bilibili and YouTube send the same transcript to it first. If that request fails, this analysis fails and the content is not sent to another model. The address, key, and model name stay on this device and can be cleared at any time. Requests send them only to the provider you choose.",
+    "If you configure a decision-model endpoint, Bilibili and YouTube send the same transcript to it. When both models are configured, the switch in Settings decides whether the LLM or the decision model runs first. If the selected request fails, this analysis fails and the content is not sent to another model. The address, key, and model name stay on this device and can be cleared at any time. Requests send them only to the provider you choose.",
   "privacy.permissions": "Permissions",
   "privacy.permission.local": "Storage · local only (settings and key)",
   "privacy.permission.sites":

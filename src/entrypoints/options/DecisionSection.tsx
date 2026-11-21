@@ -24,8 +24,8 @@ import { Switch } from "../../components/ui/switch";
 import { t } from "../../core/i18n";
 
 /**
- * 决策模型设置：填了完整接口地址就优先用决策模型，留空就用上面配置的模型。
- * 两个都配时由「优先用上面配置的模型」开关决定用哪一条，选中的那条失败就报错。
+ * 决策模型设置：填了完整接口地址就启用决策模型，留空就只用 LLM。
+ * 两个都配时由「优先用 LLM」开关决定先用哪一条，选中的那条失败就报错。
  */
 export function DecisionSection(): JSX.Element {
   const [config, setConfig] = useState<DecisionConfig | null>(null);

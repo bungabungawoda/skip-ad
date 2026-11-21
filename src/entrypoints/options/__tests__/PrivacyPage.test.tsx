@@ -41,6 +41,6 @@ describe("隐私说明", () => {
     root = createRoot(container);
     act(() => root?.render(<PrivacyPage onConfigure={() => {}} />));
     expect(container.textContent).toContain("不会把内容自动转给另一个模型");
-    expect(container.textContent).not.toContain("改用上面配置的模型");
+    expect(container.textContent).not.toContain("自动改用");
   });
 });
